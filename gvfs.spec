@@ -1,11 +1,15 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
 Version:	1.14.1
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.14/%{name}-%{version}.tar.xz
 # Source0-md5:	919f5e705aba5285b4d4b5e2c03494e7
+Patch0:		do-not-emit-connected-added-signals-at-object-creation.patch
+Patch1:		gdaemonmount-Check-for-a-NULL-GMountOperation-when-unmounting.patch
+Patch2:		proxy-volume-monitor-Dont-disable-exit_on_close-on-session-bus.patch
+Patch3:		proxy-volume-monitor-Dont-force-close-the-session-bus.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
@@ -123,6 +127,10 @@ Header files for GVFS library.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 %{__intltoolize}
@@ -131,10 +139,6 @@ Header files for GVFS library.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-
-# In file included from gvfsbackendafpbrowse.c:40:
-# gvfsafpserver.h:51: error: redefinition of typedef 'GVfsAfpServer'
-# gvfsafpvolume.h:30: note: previous declaration of 'GVfsAfpServer' was here
 %configure \
 	--disable-hal			\
 	--disable-gdu			\
