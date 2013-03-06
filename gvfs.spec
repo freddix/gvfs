@@ -1,7 +1,7 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
 Version:	1.14.2
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.14/%{name}-%{version}.tar.xz
@@ -9,7 +9,7 @@ Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.14/%{name}-%{version}.tar
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
-BuildRequires:	bluez-libs-devel
+BuildRequires:	bluez4-devel
 BuildRequires:	dbus-devel
 BuildRequires:	fuse-devel
 BuildRequires:	gettext-devel
