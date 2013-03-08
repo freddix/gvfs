@@ -1,0 +1,11 @@
+--- gvfs-1.14.2/daemon/gvfsbackendcdda.c~	2012-11-12 17:41:07.000000000 +0100
++++ gvfs-1.14.2/daemon/gvfsbackendcdda.c	2013-02-04 13:39:01.838040145 +0100
+@@ -55,7 +55,7 @@
+ #include "gvfsjobenumerate.h"
+ 
+ #define DO_NOT_WANT_PARANOIA_COMPATIBILITY
+-#include <cdio/paranoia.h>
++#include <cdio/paranoia/paranoia.h>
+ #include <cdio/cdio.h>
+ 
+ /* TODO:
