@@ -1,12 +1,11 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
-Version:	1.14.2
+Version:	1.16.0
 Release:	3
 License:	LGPL v2+
 Group:		Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.14/%{name}-%{version}.tar.xz
-# Source0-md5:	43e7af7132c2425289321c2156655d1f
-Patch0:		%{name}-cdio.patch
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.16/%{name}-%{version}.tar.xz
+# Source0-md5:	e712d12909d31ec7600f4e5c86d2b4b2
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
@@ -19,10 +18,10 @@ BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	libarchive-devel
 BuildRequires:	libbluray-devel
-BuildRequires:	libcdio-devel
-BuildRequires:	libcdio-devel
+BuildRequires:	libcdio-paranoia-devel
 BuildRequires:	libgnome-keyring-devel
 BuildRequires:	libgphoto2-devel
+BuildRequires:	libmtp-devel
 BuildRequires:	libsecret-devel
 BuildRequires:	libsmbclient-devel
 BuildRequires:	libsoup-gnome-devel
@@ -89,6 +88,14 @@ Requires:	libgphoto2-runtime
 %description gphoto2
 libgphoto2 support for gvfs.
 
+%package mtp
+Summary:	MTP support for gvfs
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description mtp
+MTP support for gvfs.
+
 %package obexftp
 Summary:	obexftp support for gvfs
 Group:		Libraries
@@ -124,7 +131,6 @@ Header files for GVFS library.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__intltoolize}
@@ -143,11 +149,11 @@ Header files for GVFS library.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/gio/modules/*.la
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ca@valencia,en@shaw}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/gio/modules/*.la
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/{ca@valencia,en@shaw}
 
 %find_lang %{name}
 
@@ -156,7 +162,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %update_gsettings_cache
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 umask 022
 gio-querymodules %{_libdir}/gio/modules ||:
 
@@ -166,30 +172,30 @@ umask 022
 gio-querymodules %{_libdir}/gio/modules ||:
 
 %post archive
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post cdio
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post dnssd
 %update_gsettings_cache
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %postun dnssd
 %update_gsettings_cache
 
 %post fuse
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post gphoto2
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post obexftp
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post smb
 %update_gsettings_cache
-killall -q -USR1 gvfsd || :
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %postun smb
 %update_gsettings_cache
@@ -244,6 +250,8 @@ killall -q -USR1 gvfsd || :
 
 %{_datadir}/glib-2.0/schemas/org.gnome.system.gvfs.enums.xml
 
+%{_prefix}/lib/tmpfiles.d/gvfsd-fuse-tmpfiles.conf
+
 %{_mandir}/man1/gvfs-cat.1*
 %{_mandir}/man1/gvfs-copy.1*
 %{_mandir}/man1/gvfs-info.1*
@@ -296,6 +304,14 @@ killall -q -USR1 gvfsd || :
 %{_datadir}/dbus-1/services/org.gtk.Private.GPhoto2VolumeMonitor.service
 %{_datadir}/gvfs/mounts/gphoto2.mount
 %{_datadir}/gvfs/remote-volume-monitors/gphoto2.monitor
+
+%files mtp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libexecdir}/gvfs-mtp-volume-monitor
+%attr(755,root,root) %{_libexecdir}/gvfsd-mtp
+%{_datadir}/dbus-1/services/org.gtk.Private.MTPVolumeMonitor.service
+%{_datadir}/gvfs/mounts/mtp.mount
+%{_datadir}/gvfs/remote-volume-monitors/mtp.monitor
 
 %files obexftp
 %defattr(644,root,root,755)
