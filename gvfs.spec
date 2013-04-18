@@ -1,11 +1,11 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
-Version:	1.16.0
+Version:	1.16.1
 Release:	3
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.16/%{name}-%{version}.tar.xz
-# Source0-md5:	e712d12909d31ec7600f4e5c86d2b4b2
+# Source0-md5:	d47c39e34a651ad3001a10eb18b13e39
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
@@ -14,6 +14,7 @@ BuildRequires:	dbus-devel
 BuildRequires:	fuse-devel
 BuildRequires:	gettext-devel
 BuildRequires:	glib-devel
+BuildRequires:	gnome-online-accounts-devel
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	libarchive-devel
@@ -79,6 +80,15 @@ Requires:	fuse
 %description fuse
 FUSE support for gvfs.
 
+%package gnome-online-accounts
+Summary:	GNOME Online Accounts support for gvfs
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	gnome-online-accounts
+
+%description gnome-online-accounts
+GNOME Online Accounts support for gvfs.
+
 %package gphoto2
 Summary:	libgphoto2 support for gvfs
 Group:		Libraries
@@ -92,6 +102,7 @@ libgphoto2 support for gvfs.
 Summary:	MTP support for gvfs
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	libmtp-udev
 
 %description mtp
 MTP support for gvfs.
@@ -185,6 +196,9 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %update_gsettings_cache
 
 %post fuse
+killall -q -USR1 gvfsd >/dev/null 2>&1 || :
+
+%post gnome-online-accounts
 killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post gphoto2
@@ -296,6 +310,12 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libexecdir}/gvfsd-fuse
 %{_mandir}/man1/gvfsd-fuse.1*
+
+%files gnome-online-accounts
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libexecdir}/gvfs-goa-volume-monitor
+%{_datadir}/dbus-1/services/org.gtk.Private.GoaVolumeMonitor.service
+%{_datadir}/gvfs/remote-volume-monitors/goa.monitor
 
 %files gphoto2
 %defattr(644,root,root,755)
