@@ -1,7 +1,7 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
 Version:	1.16.1
-Release:	3
+Release:	4
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.16/%{name}-%{version}.tar.xz
@@ -34,6 +34,7 @@ Requires(post,postun):	glib-gio-gsettings
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	udev
 Requires:	udisks2
+Suggests:	%{name}-backend-recent-files = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_libexecdir	%{_libdir}/%{name}
@@ -44,6 +45,15 @@ processes which you talk to via D-BUS. It contains a gio module that
 seamlessly adds gvfs support to all applications using the gio API. It
 also supports exposing the gvfs mounts to non-gio applications using
 FUSE.
+
+# subpkg due to gtk+3 dependancy
+%package backend-recent-files
+Summary:	Recent files backend
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description backend-recent-files
+Recent files backend for use with GTK+ 3 applications.
 
 %package archive
 Summary:	libarchive support for gvfs
@@ -235,7 +245,6 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %attr(755,root,root) %{_libexecdir}/gvfsd-localtest
 %attr(755,root,root) %{_libexecdir}/gvfsd-metadata
 %attr(755,root,root) %{_libexecdir}/gvfsd-network
-%attr(755,root,root) %{_libexecdir}/gvfsd-recent
 %attr(755,root,root) %{_libexecdir}/gvfsd-sftp
 %attr(755,root,root) %{_libexecdir}/gvfsd-trash
 
@@ -258,7 +267,6 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %{_datadir}/gvfs/mounts/http.mount
 %{_datadir}/gvfs/mounts/localtest.mount
 %{_datadir}/gvfs/mounts/network.mount
-%{_datadir}/gvfs/mounts/recent.mount
 %{_datadir}/gvfs/mounts/sftp.mount
 %{_datadir}/gvfs/mounts/trash.mount
 
@@ -286,6 +294,11 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %{_mandir}/man1/gvfsd-metadata.1*
 %{_mandir}/man1/gvfsd.1*
 %{_mandir}/man7/gvfs.7*
+
+%files backend-recent-files
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libexecdir}/gvfsd-recent
+%{_datadir}/gvfs/mounts/recent.mount
 
 %files archive
 %defattr(644,root,root,755)
