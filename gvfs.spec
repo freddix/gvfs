@@ -1,11 +1,11 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
-Version:	1.16.3
+Version:	1.18.1
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.16/%{name}-%{version}.tar.xz
-# Source0-md5:	122f20b25a5e0259a3d33be25113a0aa
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.18/%{name}-%{version}.tar.xz
+# Source0-md5:	9319e74c892c26eaa3388327fcf0053c
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
@@ -13,19 +13,19 @@ BuildRequires:	bluez4-devel
 BuildRequires:	dbus-devel
 BuildRequires:	fuse-devel
 BuildRequires:	gettext-devel
-BuildRequires:	glib-devel
-BuildRequires:	gnome-online-accounts-devel
+BuildRequires:	glib-devel >= 1:2.38.0
+BuildRequires:	gnome-online-accounts-devel >= 3.10.0
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	libarchive-devel
 BuildRequires:	libbluray-devel
 BuildRequires:	libcdio-paranoia-devel
-BuildRequires:	libgnome-keyring-devel
+BuildRequires:	libgnome-keyring-devel >= 3.10.0
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libmtp-devel
 BuildRequires:	libsecret-devel
 BuildRequires:	libsmbclient-devel
-BuildRequires:	libsoup-gnome-devel
+BuildRequires:	libsoup-gnome-devel >= 2.44.0
 BuildRequires:	libtool
 BuildRequires:	pkg-config
 BuildRequires:	udev-glib-devel
@@ -46,7 +46,7 @@ seamlessly adds gvfs support to all applications using the gio API. It
 also supports exposing the gvfs mounts to non-gio applications using
 FUSE.
 
-# subpkg due to gtk+3 dependancy
+# depends on gtk+3
 %package backend-recent-files
 Summary:	Recent files backend
 Group:		Libraries
