@@ -1,15 +1,14 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
-Version:	1.18.1
+Version:	1.18.2
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.18/%{name}-%{version}.tar.xz
-# Source0-md5:	9319e74c892c26eaa3388327fcf0053c
+# Source0-md5:	6479b629a0a139b47c3f8279a176182b
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
-BuildRequires:	bluez-devel
 BuildRequires:	dbus-devel
 BuildRequires:	fuse-devel
 BuildRequires:	gettext-devel
@@ -117,15 +116,6 @@ Requires:	libmtp-udev
 %description mtp
 MTP support for gvfs.
 
-%package obexftp
-Summary:	obexftp support for gvfs
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	obex-data-server
-
-%description obexftp
-obexftp support for gvfs.
-
 %package smb
 Summary:	smb support for gvfs
 Group:		Libraries
@@ -163,6 +153,7 @@ Header files for GVFS library.
 %configure \
 	--disable-hal			\
 	--disable-gdu			\
+	--disable-obexftp		\
 	--disable-schemas-compile	\
 	--disable-silent-rules
 %{__make}
@@ -212,9 +203,6 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post gphoto2
-killall -q -USR1 gvfsd >/dev/null 2>&1 || :
-
-%post obexftp
 killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 
 %post smb
@@ -345,11 +333,6 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %{_datadir}/dbus-1/services/org.gtk.Private.MTPVolumeMonitor.service
 %{_datadir}/gvfs/mounts/mtp.mount
 %{_datadir}/gvfs/remote-volume-monitors/mtp.monitor
-
-%files obexftp
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libexecdir}/gvfsd-obexftp
-%{_datadir}/gvfs/mounts/obexftp.mount
 
 %files smb
 %defattr(644,root,root,755)
