@@ -1,7 +1,7 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
 Version:	1.18.2
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.18/%{name}-%{version}.tar.xz
@@ -164,7 +164,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/gio/modules/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/{*,gio/modules/*}.la
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/GConf/gsettings/*.convert
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/{ca@valencia,en@shaw}
 
 %find_lang %{name}
@@ -304,7 +305,6 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libexecdir}/gvfsd-dnssd
 %{_datadir}/gvfs/mounts/dns-sd.mount
-%{_datadir}/GConf/gsettings/gvfs-dns-sd.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.system.dns_sd.gschema.xml
 
 %files fuse
@@ -340,7 +340,6 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %attr(755,root,root) %{_libexecdir}/gvfsd-smb-browse
 %{_datadir}/gvfs/mounts/smb-browse.mount
 %{_datadir}/gvfs/mounts/smb.mount
-%{_datadir}/GConf/gsettings/gvfs-smb.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.system.smb.gschema.xml
 
 %files libs
