@@ -1,11 +1,11 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
-Version:	1.18.3
-Release:	2
+Version:	1.20.0
+Release:	1
 License:	LGPL v2+
 Group:		Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.18/%{name}-%{version}.tar.xz
-# Source0-md5:	3620baa478f1748bd32d2f47bcbe30d0
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.20/%{name}-%{version}.tar.xz
+# Source0-md5:	5c19d31f61af35ca7da3413a1db46bb0
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
@@ -30,7 +30,7 @@ BuildRequires:	pkg-config
 BuildRequires:	udev-glib-devel
 BuildRequires:	udisks2-devel
 Requires(post,postun):	glib-gio-gsettings
-Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	gvfs-libs
 Requires:	udev
 Requires:	udisks2
 Suggests:	%{name}-backend-recent-files = %{version}-%{release}
@@ -164,7 +164,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/{*,gio/modules/*}.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/{gvfs,gio/modules}/*.la
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/GConf/gsettings/*.convert
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/{ca@valencia,en@shaw}
 
@@ -177,7 +177,8 @@ rm -rf $RPM_BUILD_ROOT
 %update_gsettings_cache
 killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 umask 022
-gio-querymodules %{_libdir}/gio/modules ||:
+gio-querymodules %{_libdir}/gio/modules || :
+systemd-tmpfiles --create gvfsd-fuse-tmpfiles.conf >/dev/null 2>&1 || :
 
 %postun
 %update_gsettings_cache
@@ -213,9 +214,6 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %postun smb
 %update_gsettings_cache
 
-%post	libs -p /usr/sbin/ldconfig
-%postun	libs -p /usr/sbin/ldconfig
-
 %files -f gvfs.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README TODO
@@ -223,6 +221,7 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %attr(755,root,root) %{_libdir}/gio/modules/libgioremote-volume-monitor.so
 %attr(755,root,root) %{_libdir}/gio/modules/libgvfsdbus.so
 
+%dir %{_libexecdir}
 %attr(755,root,root) %{_libexecdir}/gvfs-udisks2-volume-monitor
 %attr(755,root,root) %{_libexecdir}/gvfsd
 %attr(755,root,root) %{_libexecdir}/gvfsd-afp
@@ -236,11 +235,12 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %attr(755,root,root) %{_libexecdir}/gvfsd-network
 %attr(755,root,root) %{_libexecdir}/gvfsd-sftp
 %attr(755,root,root) %{_libexecdir}/gvfsd-trash
+%attr(755,root,root) %{_libdir}/gvfs/libgvfscommon.so
+%attr(755,root,root) %{_libdir}/gvfs/libgvfsdaemon.so
 
 %dir %{_datadir}/gvfs
 %dir %{_datadir}/gvfs/mounts
 %dir %{_datadir}/gvfs/remote-volume-monitors
-%dir %{_libexecdir}
 
 %{_datadir}/dbus-1/services/gvfs-daemon.service
 %{_datadir}/dbus-1/services/gvfs-metadata.service
@@ -342,13 +342,7 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %{_datadir}/gvfs/mounts/smb.mount
 %{_datadir}/glib-2.0/schemas/org.gnome.system.smb.gschema.xml
 
-%files libs
-%defattr(644,root,root,755)
-%attr(755,root,root) %ghost %{_libdir}/libgvfs*.so.?
-%attr(755,root,root) %{_libdir}/libgvfs*.so.*.*.*
-
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgvfs*.so
 %{_includedir}/gvfs-client
 
