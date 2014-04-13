@@ -1,11 +1,11 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
-Version:	1.20.0
+Version:	1.20.1
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.20/%{name}-%{version}.tar.xz
-# Source0-md5:	5c19d31f61af35ca7da3413a1db46bb0
+# Source0-md5:	2c6d4d08ebd691ccdb3f8da88a7c4b20
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
