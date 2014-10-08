@@ -1,30 +1,30 @@
 Summary:	Userspace virtual filesystem
 Name:		gvfs
-Version:	1.20.2
+Version:	1.22.0
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.20/%{name}-%{version}.tar.xz
-# Source0-md5:	da2a542ea68b5294e41c0e23216ffdf9
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gvfs/1.22/%{name}-%{version}.tar.xz
+# Source0-md5:	065fc9a1e2169ec224fa2c752aeefa37
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-glib-devel
 BuildRequires:	dbus-devel
 BuildRequires:	fuse-devel
 BuildRequires:	gettext-devel
-BuildRequires:	glib-devel >= 1:2.38.0
-BuildRequires:	gnome-online-accounts-devel >= 3.10.0
+BuildRequires:	glib-devel >= 1:2.42.0
+BuildRequires:	gnome-online-accounts-devel >= 3.14.0
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	libarchive-devel
 BuildRequires:	libbluray-devel
 BuildRequires:	libcdio-paranoia-devel
-BuildRequires:	libgnome-keyring-devel >= 3.10.0
+BuildRequires:	libgnome-keyring-devel >= 3.12.0
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libmtp-devel
 BuildRequires:	libsecret-devel
 BuildRequires:	libsmbclient-devel
-BuildRequires:	libsoup-gnome-devel >= 2.44.0
+BuildRequires:	libsoup-gnome-devel >= 2.46.0
 BuildRequires:	libtool
 BuildRequires:	pkg-config
 BuildRequires:	udev-glib-devel
@@ -139,6 +139,14 @@ Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Header files for GVFS library.
+
+%package -n bash-completion-%{name}
+Summary:	BASH auto-complete site functions
+Group:		Documentation
+Requires:	bash
+
+%description -n bash-completion-%{name}
+BASH auto-complete site functions.
 
 %prep
 %setup -q
@@ -266,6 +274,7 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %{_mandir}/man1/gvfs-cat.1*
 %{_mandir}/man1/gvfs-copy.1*
 %{_mandir}/man1/gvfs-info.1*
+%{_mandir}/man1/gvfs-less.1*
 %{_mandir}/man1/gvfs-ls.1*
 %{_mandir}/man1/gvfs-mime.1*
 %{_mandir}/man1/gvfs-mkdir.1*
@@ -345,4 +354,8 @@ killall -q -USR1 gvfsd >/dev/null 2>&1 || :
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/gvfs-client
+
+%files -n bash-completion-%{name}
+%attr(755,root,root)
+%{_datadir}/bash-completion/completions/*
 
